@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Pages</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            margin: 0;
+            background-color: #f0f0f0;
+            /* background-color: black; */
+        }
+
+        .container {
+            background-color: #e0f7fa;
+            /* background-color: black; */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* height: 40%; */
+            width: 30%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00796b;
+        }
+
+        .new-task {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #b2dfdb;
+            border-radius: 5px;
+        }
+
+        #button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        #tasks {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .task {
+            background-color: #e0f2f1;
+            border: 2px solid #b2dfdb;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task span {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .task .actions {
+            display: flex;
+        }
+
+        .task .actions button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #00796b;
+            margin-left: 10px;
+        }
+
+        .task .actions button:hover {
+            color: #004d40;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>TODO App</h1>
+        <div class="new-task">
+            <input type="text" id="input" placeholder="Add New Task">
+            <button id="button">+</button>
+        </div>
+        <p style="text-align: center;">Tasks</p>
+        <div id="tasks"></div>
+    </div>
+
+
+    <script>
+        let Button = document.getElementById("button");
+        Button.addEventListener("click", addTask);
+
+
+        function addTask() {
+            let taskInput = document.getElementById("input");
+            let taskText = taskInput.value.trim();
+
+            if (taskText) {
+                let task = document.createElement("div");
+                task.className = "task";  // For Css
+
+                let taskContent = document.createElement("span");
+                let taskTitle = document.createElement("b");
+                let taskDate = document.createElement("span");
+                let taskDesc = document.createElement("span");
+
+                taskTitle.textContent = taskText.split(" ")[0];
+                taskDate.textContent = new Date().toISOString().split("T")[0];
+                taskDesc.textContent = taskText.split(" ").slice(1).join(" ");
+
+                taskContent.appendChild(taskTitle);
+                taskContent.appendChild(taskDate);
+                taskContent.appendChild(taskDesc);
+
+                let actions = document.createElement("div");
+                actions.className = "actions";  // For Css                      
+
+                let editButton = document.createElement("button");
+                editButton.innerHTML = "✏️";
+                editButton.addEventListener("click", () => {
+                    editTask(task)
+                });
+
+                let deleteButton = document.createElement("button");
+                deleteButton.innerHTML = "🗑️";
+                deleteButton.addEventListener("click", () => {
+                    deleteTask(task)
+                });
+
+                actions.appendChild(editButton);
+                actions.appendChild(deleteButton);
+
+                task.appendChild(taskContent);
+                task.appendChild(actions);
+
+                document.getElementById("tasks").appendChild(task);
+                taskInput.value = "";
+            }
+        }
+
+
+        function editTask(task) {
+            let taskInput = document.getElementById("input");
+            let taskContent = task.querySelector("span");
+            let taskTitle = taskContent.querySelector("b").textContent;
+            let taskDesc = taskContent.querySelector("span:last-child").textContent;
+            taskInput.value = taskTitle + " " + taskDesc;
+            deleteTask(task);
+        }
+
+        function deleteTask(task) {
+            task.remove();
+        }
+
+    </script>
+
+</body>
+
+</html>
